@@ -1,51 +1,96 @@
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css"
 import { StateContext } from '../context/StateContext';
 
 export default function DateTime() {
-    const [timeOptions, setTimeOptions] = useState([]);
 
-    const { selectedDate, setSelectedDate } = useContext(StateContext);
+    const [isDropDowmVisible, setIsDropDowmVisible] = useState(false);
+    const [selectedTime, setSelectedTime] = useState("");
+    const { selectedDate, setSelectedDate, timeOptions, setTimeOptions } = useContext(StateContext);
 
-    const generateTimeOptions = (startHour, endHour, interval) => {
+    const handleDateChange = (date) => {
+        setSelectedDate(date)
+    }
+
+    // console.log(selectedDate  === Date());
+    
+
+    const generateTimeOptions = useMemo(() => {
         const times = [];
+        const endHour = 23; // 11 PM
         const now = new Date();
+        if (selectedDate === null || selectedDate.toDateString() === now.toDateString()) {
+            let hour = now.getHours();
+            let minute = now.getMinutes();
 
-        for (let hour = startHour; hour < endHour; hour++) {
-            for (let minute = 0; minute < 60; minute += interval) {
-                const time = new Date();
-                time.setHours(hour, minute, 0, 0);
+            minute = Math.ceil(minute / 5) * 5;
+            if (minute === 60) {
+                minute = 0;
+                hour += 1;
+            }
 
-                if (selectedDate || time >= now) {
-                    times.push(time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+            while (hour < endHour || (hour === endHour && minute === 0)) {
+                // Format time in 12-hour format with AM/PM
+                const period = hour >= 12 ? "PM" : "AM";
+                const formattedHour = hour % 12 || 12;
+                const formattedMinute = minute.toString().padStart(2, "0");
+                times.push(`${formattedHour}:${formattedMinute} ${period}`);
+
+                // Increment by 15 minutes
+                minute += 15;
+                if (minute >= 60) {
+                    minute = 0;
+                    hour += 1;
+                }
+            }
+        }
+        else {
+            let hour = 6;
+            let minute = 0;
+    
+            while (hour < endHour || (hour === endHour && minute === 0)) {
+                // Format time in 12-hour format with AM/PM
+                const period = hour >= 12 ? "PM" : "AM";
+                const formattedHour = hour % 12 || 12;
+                const formattedMinute = minute.toString().padStart(2, "0");
+    
+                if (minute % 5 === 0) { // Only include multiples of 5
+                    times.push(`${formattedHour}:${formattedMinute} ${period}`);
+                }
+    
+                // Increment by 15 minutes
+                minute += 15;
+                if (minute >= 60) {
+                    minute = 0;
+                    hour += 1;
                 }
             }
         }
         return times;
-    };
+        // return [];
+    }, [selectedDate]);
 
-    const handleDateChange = (date) => {
-        setSelectedDate(date);
-        if(date) {
-            setTimeOptions(generateTimeOptions(6,12,15));
-        }
-        else {
-            const now = new Date();
-            const startHour = now.getHours();
-            const startMinute = now.getMinutes();
-            const options = [];
+    useEffect(() => {
+        setTimeOptions(generateTimeOptions)
+    }, [generateTimeOptions])
 
-            for (let i=0; i<8; i++) {
-                const time = new Date(now.getTime() + i * 15 * 60 * 1000);
-                options.push(time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-            }
-            setTimeOptions(options);
-        }
-    };
+    function toggleDropdown() {
+        setIsDropDowmVisible(prev => !prev);
+    }
     
+
+    const handleSelection = (time) => {
+        if(selectedDate === null){
+            const today = new Date();
+            setSelectedDate(today)
+        }
+        setSelectedTime(time);
+        setIsDropDowmVisible(false);
+    }
+
     return (
-        <div className="date-time flex justify-between">
+        <div className="date-time w-[350px] mb-5 flex justify-between ">
             <div className="date w-[49%] cursor-pointer">
                 <span className='mr-3'>
                     <svg
@@ -60,26 +105,37 @@ export default function DateTime() {
                 </span>
                 <DatePicker
                     selected={selectedDate}
-                    onChange={(date) => handleDateChange(date)} // Handle date change
+                    onChange={(date) => handleDateChange(date)}
                     placeholderText="Today"
                     className="cursor-pointer w-100"
-                    minDate={new Date()} // Disable previous dates
-                    dateFormat="MMM dd" // Optional: format the date display
-                    todayButton="Today" // Optional: add a "Today" button
+                    minDate={new Date()}
+                    dateFormat="MMM dd"
+                    todayButton="Today"
                 />
                 {selectedDate !== null && (
                     <i className='bx bxs-x-circle mt-1' onClick={() => setSelectedDate(null)}></i>
                 )}
             </div>
 
-            <div className="time w-[49%] cursor-pointer">
+            <div className="time w-[49%] active:border cursor-pointer relative">
+                {isDropDowmVisible && (
+                    <ul className='absolute w-[100%] h-[150px] top-11 left-0 overflow-y-scroll shadow-lg bg-white border rounded-md'>
+                        {timeOptions.map((time, index) => (
+                            <li onClick={() => handleSelection(time)} key={index} className="cursor-pointer pl-5 py-1 hover:bg-slate-200 font-light">{time}</li>
+                        ))}
+                    </ul>
+                )}
                 <i className='bx bxs-time mr-5 ml-2 text-[20px]'></i>
-                <ul>
-                    <input type="text" disabled placeholder='Now' className='bg-transparent cursor-pointer' />
-                </ul>
-                <i className='bx bxs-chevron-down mt-1'></i>
+                <div onClick={toggleDropdown} className="input-box flex">
+                    <input
+                        readOnly
+                        type="text"
+                        value={selectedTime}
+                        placeholder='Now'
+                        className='bg-transparent cursor-pointer' />
+                    <i className='bx bxs-chevron-down mt-1'></i>
+                </div>
             </div>
         </div>
-
     )
 }

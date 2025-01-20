@@ -16,53 +16,21 @@
 
 .ride button:active,
 .courier button:active {
-    background-color: rgba(138, 132, 132,0.6);
+    background-color: rgba(138, 132, 132, 0.6);
     padding: 8px;
     border-radius: 10px;
 }
 
-.input-container .pickup-box:focus {
-    border: 2px solid;
-}
-
-.input-container .pickup-box,
-.input-container .drop-box {
-    border-radius: 5px;
-    padding: 8px 5px;
-    display: flex;
-    width: 100%;
-    background-color: rgba(201, 198, 198,0.5);
-}
-.input-container .pickup-box input,
-.input-container .drop-box input {
-    background: transparent;
-    width: 80%;
-    outline: none;
-}
-
-.input-container .pickup-box .dot,
-.input-container .drop-box .dot {
-    margin: 5px;
-}
-
-.input-container .hor-line {
-    border-left: 1px solid;
-    height: 45px;
-    position: absolute;
-    top: 30px;
-    left: 20px;
-}
-
-.input-container .date-time .date,
-.input-container .date-time .time {
-    background-color: rgba(201, 198, 198,0.5);
+.date-time .date,
+.date-time .time {
+    background-color: rgba(201, 198, 198, 0.5);
     display: flex;
     padding: 10px;
     border-radius: 10px;
 }
 
-.input-container .date-time .date input,
-.input-container .date-time .time input {
+.date-time .date input,
+.date-time .time input {
     width: 100%;
     background: transparent;
     outline: none;
