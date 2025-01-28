@@ -58,7 +58,7 @@ export default function Home() {
           <ScrollToTop />
           <Suggestions />
           <LoginSuggestion />
-          <Footer />
+          <Footer /> 
         </>
       )}
     </>
