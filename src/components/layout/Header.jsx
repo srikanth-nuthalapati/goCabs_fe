@@ -14,12 +14,30 @@ export default function Header() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [menuBtnVisible, setMenuBtnVisible] = useState(true);
 
 
   useEffect(() => {
     const user = localStorage.getItem('isAuthenticated');
     setIsAuthenticated(!!user);
   }, [currentUser]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setMenuBtnVisible(false); 
+      } else {
+        setMenuBtnVisible(true); 
+      }
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  
 
   const handleGuestLogin = async () => {
     setLoading(true);
@@ -60,37 +78,37 @@ export default function Header() {
             </li>
             <li
               onClick={handleRideClick}
-              className={`flex text-[20px] items-center py-[3px] px-[15px] cursor-pointer ${location.pathname === '/ride' ? ' border-b-[2px] border-b-black' : ''} ${!isAuthenticated ? 'hover:bg-[#776464e7] rounded-[30px]' : 'py-[31px]'}`}
+              className={`flex text-[20px] items-center py-[3px] px-[15px] cursor-pointer ${location.pathname === '/ride' ? ' border-b-[2px] border-b-black' : ''} ${!isAuthenticated ? 'hover:bg-[#776464e7] rounded-[30px]' : 'py-[30px]'}`}
             >
               Ride
             </li>
           </ul>
 
-          <button 
-            className={`md:hidden ${isAuthenticated ? 'p-4' : 'text-white bg-transparent'} p-2 hover:bg-[rgba(177,173,173,0.9)] rounded`}
+          <button
+            className={`md:hidden  ${isAuthenticated ? 'p-4' : 'text-white bg-transparent'} p-2 hover:bg-[rgba(177,173,173,0.9)] rounded`}
             onClick={toggleMenu}
           >
             <Menu className='w-6 h-6' />
           </button>
 
-          <ul 
+          <ul
             className={`absolute md:static z-10 right-0 ${isAuthenticated ? 'text-black bg-white top-[80px]' : 'top-[58px] bg-black text-white right-[-20px] rounded-lg'} md:bg-transparent md:flex items-center gap-3 transition-all ease-in
               ${menuOpen ? 'flex flex-col p-[20px] border' : 'hidden md:flex'}`
             }>
             {!isAuthenticated ? (
               <>
-                <li 
-                  onClick={handleGuestLogin} 
+                <li
+                  onClick={handleGuestLogin}
                   className='text-[18px] flex items-center py-[4px] px-[12px] cursor-pointer hover:bg-[#776464ea] rounded-[30px]'>
-                    Guest
+                  Guest
                 </li>
                 <li
-                  onClick={menuOpen ? () =>setMenuOpen(false) : null}
+                  onClick={menuOpen ? () => setMenuOpen(false) : null}
                   className='text-[18px] flex items-center py-[4px] px-[12px] cursor-pointer hover:bg-[#776464d2] rounded-[30px]'>
-                    <Link to={'/login'}>Log in</Link>
+                  <Link to={'/login'}>Log in</Link>
                 </li>
                 <button
-                  onClick={menuOpen ? () =>setMenuOpen(false) : null}
+                  onClick={menuOpen ? () => setMenuOpen(false) : null}
                   className='font-light text-[18px] flex items-center py-[3px] px-[12px] bg-white text-black cursor-pointer hover:bg-[rgba(255,255,255,0.9)] rounded-[30px]' >
                   <Link to={'/signup'}>Sign up</Link>
                 </button>
@@ -98,23 +116,23 @@ export default function Header() {
             ) : (
               <li className='flex items-center'>
                 <Link to={'/profile'}>
-                  {menuOpen ? (
-                    <p 
+                  {menuOpen && menuBtnVisible ? (
+                    <p
                       className='p-2 hover:bg-[rgba(197,180,180,0.53)] rounded-xl'
                       onClick={() => setMenuOpen(prev => !prev)}
                     >
-                        profile
+                      profile
                     </p>
                   ) :
-                  (
-                  <img 
-                    width={50} 
-                    className='bg-black mr-[30px] rounded-[50%]' 
-                    src={profileImage} 
-                    alt="profile" 
-                    title='profile' 
-                  />
-                  )}
+                    (
+                      <img
+                        width={50}
+                        className='bg-black mr-[30px] md:block rounded-[50%]'
+                        src={profileImage}
+                        alt="profile"
+                        title='profile'
+                      />
+                    )}
                 </Link>
               </li>
             )}
