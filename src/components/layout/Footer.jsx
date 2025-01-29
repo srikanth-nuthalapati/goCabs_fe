@@ -37,11 +37,11 @@ export default function Footer() {
 
                 <div className="link-container flex flex-wrap gap-[20px] my-[50px] w-[100%] lg:w-[80%] lg:justify-between">
                     {arr.map((val) => (
-                        <div key={val.name} className="title text-sm">
+                        <div key={val.name}>
                             <h2 className='text-[20px] pb-3'>{val.name}</h2>
                             <ul>
                                 {val.value.map((item) => (
-                                    <li className='py-[5px] font-light cursor-pointer hover:opacity-[0.5]' key={item}>{item}</li>
+                                    <li className='py-[5px] text-[15px] font-light cursor-pointer hover:opacity-[0.5]' key={item}>{item}</li>
                                 ))}
                             </ul>
                         </div>

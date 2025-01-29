@@ -60,7 +60,10 @@ export default function Header() {
             </li>
             <li
               onClick={handleRideClick}
-              className={`flex text-[20px] items-center py-[3px] px-[15px] cursor-pointer ${location.pathname === '/ride' ? ' py-[30px] border-b-[2px] border-b-black' : ''} ${!isAuthenticated ? 'hover:bg-[#776464e7] rounded-[30px]' : ''}`}>Ride</li>
+              className={`flex text-[20px] items-center py-[3px] px-[15px] cursor-pointer ${location.pathname === '/ride' ? ' border-b-[2px] border-b-black' : ''} ${!isAuthenticated ? 'hover:bg-[#776464e7] rounded-[30px]' : 'py-[31px]'}`}
+            >
+              Ride
+            </li>
           </ul>
 
           <button 
@@ -81,11 +84,14 @@ export default function Header() {
                   className='text-[18px] flex items-center py-[4px] px-[12px] cursor-pointer hover:bg-[#776464ea] rounded-[30px]'>
                     Guest
                 </li>
-                <li 
+                <li
+                  onClick={menuOpen ? () =>setMenuOpen(false) : null}
                   className='text-[18px] flex items-center py-[4px] px-[12px] cursor-pointer hover:bg-[#776464d2] rounded-[30px]'>
                     <Link to={'/login'}>Log in</Link>
                 </li>
-                <button className='font-light text-[18px] flex items-center py-[3px] px-[12px] bg-white text-black cursor-pointer hover:bg-[rgba(255,255,255,0.9)] rounded-[30px]' >
+                <button
+                  onClick={menuOpen ? () =>setMenuOpen(false) : null}
+                  className='font-light text-[18px] flex items-center py-[3px] px-[12px] bg-white text-black cursor-pointer hover:bg-[rgba(255,255,255,0.9)] rounded-[30px]' >
                   <Link to={'/signup'}>Sign up</Link>
                 </button>
               </>

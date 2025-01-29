@@ -70,7 +70,7 @@ export default function InputField() {
   };
 
   return (
-    <div className={`input-container h-auto flex flex-col gap-4 justify-between relative ${isAuthenticated ? 'w-[100%] lg:w-[400px]':'w-[75%]'}`}>
+    <div className={`input-container h-auto flex flex-col gap-4 justify-between relative ${isAuthenticated ? 'w-[100%] lg:w-[400px]':'w-[100%] lg:w-[75%]'}`}>
         <div className="h-[35%] absolute top-[30px] left-[20px] border-l-[1px] border-l-black"></div>
       <div 
         className="pickup-box rounded-md py-[8px] px-[5px] flex items-center bg-[rgba(201,198,198,0.5)]">

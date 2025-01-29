@@ -35,8 +35,8 @@ export default function Home() {
       <div className="container  w-[100%] lg:w-full lg:m-auto lg:py-[20px] p-[20px]">
         <div className="wrapper flex w-[100%] py-[20px]">
 
-          <div className="left w-[70%] sm:pl-[10px] pr-[10px]">
-            <div className="caption lg:text-[2.7rem] font-bold mb-[20px]">
+          <div className="left w-[100%] px-3 sm:pl-[10px] pr-[10px]">
+            <div className="caption text-[1.5rem] lg:text-[2.7rem] font-bold mb-[20px]">
               <h1>{mode === 'ride' ? 'Go anywhere with goCabs' : 'Deliver a package'} </h1>
             </div>
             <ModeSelector mode={mode} handleMode={handleMode} />
@@ -53,12 +53,12 @@ export default function Home() {
 
         </div>
       </div>
+      <ScrollToTop />
       {!isAuthenticated && (
         <>
-          <ScrollToTop />
           <Suggestions />
           <LoginSuggestion />
-          <Footer /> 
+          <Footer />
         </>
       )}
     </>
